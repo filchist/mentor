@@ -1033,21 +1033,17 @@ li { margin-bottom: .3rem; }
 }
 
 @media (max-width: 720px) {
-  .route {
-    display: flex; overflow-x: auto; gap: 10px; padding-bottom: 6px;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 30px), transparent);
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 30px), transparent);
-  }
-  .route::-webkit-scrollbar { display: none; }
-  .route li { min-width: 96px; padding-right: 10px; scroll-snap-align: start; }
-  .route { scroll-snap-type: x proximity; }
+  /* На телефоне полоса маршрута дублирует номера плиток — оставляем доску */
+  .route { display: none; }
   .board { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .tile { aspect-ratio: 1 / 1; }
-  .tile__title { font-size: .9rem; }
-  .tile__move { font-size: max(11px, .68rem); }
-  .tile__open { display: none; }
-  .tile__stage { font-size: max(11px, .68rem); }
+  /* На телефоне подпись уходит под картинку — иначе текст не помещается в кадр */
+  .tile { aspect-ratio: auto; display: block; background: var(--paper-hi); }
+  .tile::after { content: none; }
+  .tile__img { position: relative; inset: auto; display: block; width: 100%; aspect-ratio: 16 / 10; }
+  .tile__body { position: static; left: auto; right: auto; bottom: auto; display: block; padding: 10px 12px 12px; min-height: 92px; }
+  .tile__title { font-size: .95rem; color: var(--ink); line-height: 1.2; }
+  .tile__stage { font-size: max(11px, .68rem); letter-spacing: .09em; color: var(--rust); margin-bottom: 4px; }
+  .tile__move, .tile__open { display: none; }
   .board-foot { align-items: flex-start; }
   .board-foot .btn { margin-left: 0; }
   .case-hero { height: 190px; }
@@ -1401,15 +1397,15 @@ li { margin-bottom: .3rem; }
   },
 
   stages: [
-    { id: "s01", num: "01", title: "Порог", lead: "Знакомство и поручительство", note: "За входом в программу стоит чьё-то поручительство. Первый контакт — проверка кредита доверия, а не продажа себя." },
-    { id: "s02", num: "02", title: "Круг", lead: "Правила, ритм, регулярные встречи", note: "Работа начинается не с инсайта, а с расписания: слоты, каналы, домашка, записи, обратная связь." },
-    { id: "s03", num: "03", title: "Вопрос и образ", lead: "Запрос, цели и образ результата", note: "Запрос в анкете почти всегда не тот, с которым менти живёт. Задача — вытащить настоящий вопрос и договориться о результате." },
-    { id: "s04", num: "04", title: "Обратная связь", lead: "Корректировка и удержание контакта", note: "Самая тонкая часть: сказать правду так, чтобы менти не ушёл. Сила обратной связи не должна превышать запас доверия." },
-    { id: "s05", num: "05", title: "Разрыв", lead: "Потеря связи и кризис", note: "Менти пропадает, ожидания не совпадают, запрос уходит в дебри. Проверяется не педагогика, а договороспособность." },
-    { id: "s06", num: "06", title: "Граница", lead: "Дистанция и компетенция", note: "Ментор не обязан знать всё. «Сюда я не могу, вот кто может» — сильный ход, если он сделан вовремя." },
-    { id: "s07", num: "07", title: "Дело", lead: "Проверка результата в реальности", note: "Настоящий экзаменатор — не ментор, а рынок, деревня, хакатон, собеседование. Провал здесь — данные." },
-    { id: "s08", num: "08", title: "Стратегия", lead: "Мотивация и передача авторства", note: "Хороший ментор отдаёт не только задачу, но и авторство решения. Его роль — рамка, риски и связь." },
-    { id: "s09", num: "09", title: "Уход", lead: "Расставание и дистанция", note: "Финал — часть работы. Ревью, следующий шаг, благодарность и умение отпустить." }
+    { id: "s01", num: "01", title: "Порог", short: "Знакомство", lead: "Знакомство и поручительство", note: "За входом в программу стоит чьё-то поручительство. Первый контакт — проверка кредита доверия, а не продажа себя." },
+    { id: "s02", num: "02", title: "Круг", short: "Правила и ритм", lead: "Правила, ритм, регулярные встречи", note: "Работа начинается не с инсайта, а с расписания: слоты, каналы, домашка, записи, обратная связь." },
+    { id: "s03", num: "03", title: "Вопрос и образ", short: "Запрос и цель", lead: "Запрос, цели и образ результата", note: "Запрос в анкете почти всегда не тот, с которым менти живёт. Задача — вытащить настоящий вопрос и договориться о результате." },
+    { id: "s04", num: "04", title: "Обратная связь", short: "Обратная связь", lead: "Корректировка и удержание контакта", note: "Самая тонкая часть: сказать правду так, чтобы менти не ушёл. Сила обратной связи не должна превышать запас доверия." },
+    { id: "s05", num: "05", title: "Разрыв", short: "Потеря связи", lead: "Потеря связи и кризис", note: "Менти пропадает, ожидания не совпадают, запрос уходит в дебри. Проверяется не педагогика, а договороспособность." },
+    { id: "s06", num: "06", title: "Граница", short: "Границы роли", lead: "Дистанция и компетенция", note: "Ментор не обязан знать всё. «Сюда я не могу, вот кто может» — сильный ход, если он сделан вовремя." },
+    { id: "s07", num: "07", title: "Дело", short: "Проверка делом", lead: "Проверка результата в реальности", note: "Настоящий экзаменатор — не ментор, а рынок, деревня, хакатон, собеседование. Провал здесь — данные." },
+    { id: "s08", num: "08", title: "Стратегия", short: "Авторство", lead: "Мотивация и передача авторства", note: "Хороший ментор отдаёт не только задачу, но и авторство решения. Его роль — рамка, риски и связь." },
+    { id: "s09", num: "09", title: "Уход", short: "Расставание", lead: "Расставание и дистанция", note: "Финал — часть работы. Ревью, следующий шаг, благодарность и умение отпустить." }
   ],
 
   directions: [
@@ -3263,7 +3259,7 @@ li { margin-bottom: .3rem; }
     return '<a class="tile tile--' + c.id + '" href="#/case/' + c.id + '" aria-label="Кейс ' + c.num + ': ' + c.title + '">' +
       '<span class="tile__img" aria-hidden="true"></span>' +
       '<span class="tile__num" aria-hidden="true">' + c.num + '</span>' +
-      '<span class="tile__body"><span class="tile__stage">Шаг ' + c.num + ' · ' + st.title + '</span>' +
+      '<span class="tile__body"><span class="tile__stage">' + (st.short || st.lead) + '</span>' +
       '<span class="tile__title">' + c.title + '</span>' +
       '<span class="tile__move">Ментор: ' + c.move + '</span>' +
       '<span class="tile__open">Открыть разбор →</span></span></a>';
@@ -3272,7 +3268,7 @@ li { margin-bottom: .3rem; }
   function routeStrip() {
     return '<ol class="route">' + KB.stages.map(function (st) {
       var c = KB.cases.filter(function (x) { return x.stage === st.id; })[0];
-      return '<li><a href="#/case/' + (c ? c.id : "") + '"><b>' + st.num + '</b><span>' + st.title + '</span></a></li>';
+      return '<li><a href="#/case/' + (c ? c.id : "") + '"><b>' + st.num + '</b><span>' + (st.short || st.title) + '</span></a></li>';
     }).join("") + '</ol>';
   }
 
@@ -3518,7 +3514,7 @@ li { margin-bottom: .3rem; }
     return '<div class="wrap detail detail--case">' +
       '<a class="detail__back" href="#/path">← К игровому полю</a>' +
       '<div class="case-hero case-hero--' + c.id + '"><span class="case-hero__num">Кейс ' + c.num + ' · ' + c.chapter + '</span></div>' +
-      '<div class="detail__meta"><span>Шаг менти ' + c.num + ' из ' + KB.cases.length + '</span><span>·</span><span>Этап ' + st.num + ': ' + st.title + '</span></div>' +
+      '<div class="detail__meta"><span>Шаг ' + c.num + ' из ' + KB.cases.length + '</span><span>·</span><span>' + (st.short || st.title) + '</span></div>' +
       '<h1>' + c.title + '</h1>' +
       '<div class="case-pair">' +
       '<div class="case-pair__menti"><b>Шаг менти ' + c.num + '</b><p>' + c.step + '</p></div>' +
