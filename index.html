@@ -131,6 +131,8 @@ li { margin-bottom: .3rem; }
 }
 .topnav a:hover { color: var(--gold-soft); border-bottom-color: rgba(201, 162, 77, .5); }
 .topnav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+.navselect { display: none; }
+.nav-long { font-weight: inherit; margin-left: .28em; }
 
 /* ---------- Обложка ---------- */
 
@@ -209,16 +211,6 @@ li { margin-bottom: .3rem; }
   font-family: var(--sans); font-size: max(11px, .68rem); letter-spacing: .14em;
   text-transform: uppercase; color: #a99e86; text-align: right;
 }
-
-.hero__next {
-  display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 14px;
-  font-family: var(--sans); font-size: max(11px, .68rem); letter-spacing: .14em;
-  text-transform: uppercase; text-decoration: none; color: var(--gold-soft);
-  border-bottom: 1px solid rgba(201, 162, 77, .5);
-  padding-bottom: 2px;
-}
-.hero__next:hover { color: #fff; }
 
 /* ---------- Общие блоки ---------- */
 
@@ -349,14 +341,22 @@ li { margin-bottom: .3rem; }
   .brand__text { font-size: .74rem; letter-spacing: .02em; white-space: nowrap; }
   .topnav {
     margin-left: auto; width: auto; flex: 1 1 auto; min-width: 0;
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 28px), transparent);
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 28px), transparent);
+    flex-wrap: nowrap; overflow: visible;
+    -webkit-mask-image: none; mask-image: none;
   }
-  .topnav::-webkit-scrollbar { display: none; }
-  /* «Путь Маугли» уже есть в логотипе — в мобильном меню не дублируем */
-  .topnav a[data-nav="path"] { display: none; }
+  .topnav a:not([data-nav="path"]) { display: none; }
   .topnav a { padding: 10px 8px; font-size: max(11px, .6rem); white-space: nowrap; min-height: 44px; }
+  .nav-long { display: none; }
+  .navselect {
+    display: block; margin-left: auto; flex: none; max-width: 148px;
+    appearance: none; -webkit-appearance: none;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c9a24d' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 6px center / 10px 7px;
+    border: 0; border-bottom: 2px solid rgba(201, 162, 77, .55);
+    color: #e9dfc8; font-family: var(--sans); font-size: max(11px, .62rem);
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 0 24px 0 8px; min-height: 44px; cursor: pointer;
+  }
+  .navselect option { color: var(--ink); background: var(--paper-hi); }
   .brand { min-height: 44px; }
   .chip { min-height: 44px; padding: 8px 11px; }
   .footer__social a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -365,6 +365,10 @@ li { margin-bottom: .3rem; }
   .hero__stat { padding-right: 14px; margin-right: 14px; }
   .hero__stat b { font-size: 1.15rem; }
   .view-head { padding: 28px 0 6px; }
+}
+
+@media (max-width: 340px) {
+  .brand__text { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1346,11 +1350,18 @@ li { margin-bottom: .3rem; }
       <span class="brand__text">Путь Маугли<em>из джунглей к людям</em></span>
     </a>
     <nav class="topnav" aria-label="Разделы базы">
-      <a href="#/path" data-nav="path">Путь Маугли</a>
+      <a href="#/path" data-nav="path">Путь<b class="nav-long"> Маугли</b></a>
       <a href="#/tools" data-nav="tools">Инструменты</a>
       <a href="#/archetypes" data-nav="archetypes">Архетипы</a>
       <a href="#/about" data-nav="about">Как пользоваться</a>
       <a href="#/authors" data-nav="authors">Благодарности</a>
+      <select class="navselect" aria-label="Перейти в раздел">
+        <option value="">Разделы</option>
+        <option value="#/tools">Инструменты</option>
+        <option value="#/archetypes">Архетипы</option>
+        <option value="#/about">Как пользоваться</option>
+        <option value="#/authors">Благодарности</option>
+      </select>
     </nav>
   </div>
 </header>
@@ -3247,8 +3258,6 @@ li { margin-bottom: .3rem; }
       '<div class="hero__stat"><b>' + KB.archetypes.length + '</b><span>архетипа</span></div>' +
       '<div class="hero__stat"><b>' + KB.authors.length + '</b><span>авторов</span></div>' +
       '</div>' +
-      '<a class="hero__next" href="#board" data-scroll="board">К игровому полю ↓</a>' +
-      '</div>' +
       '<figure class="hero__figure"><div class="hero__frame" role="img" aria-label="Гравюра: мальчик и чёрная пантера идут по тропе через джунгли"></div>' +
       '<figcaption>Маугли и Багира. Тропа к людям.</figcaption></figure>' +
       '</div></section>';
@@ -3789,6 +3798,8 @@ li { margin-bottom: .3rem; }
       ? "Путь Маугли · клуб менторов СПбГУ"
       : title + " · Путь Маугли";
     setActiveNav(view);
+    var navSel = document.querySelector(".navselect");
+    if (navSel) navSel.value = view === "path" ? "" : "#/" + view;
     window.scrollTo(0, 0);
 
     if (route.query.id && (seg[0] === "authors" || seg[0] === "archetypes")) {
@@ -4037,6 +4048,9 @@ li { margin-bottom: .3rem; }
 
   document.addEventListener("change", function (e) {
     if (e.target && e.target.id === "toolJump" && e.target.value) {
+      location.hash = e.target.value;
+    }
+    if (e.target && e.target.classList && e.target.classList.contains("navselect") && e.target.value) {
       location.hash = e.target.value;
     }
   });
